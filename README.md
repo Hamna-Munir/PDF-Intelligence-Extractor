@@ -76,9 +76,7 @@ streamlit run app.py
     ├── app.py
     ├── requirements.txt
     ├── README.md
-    ├── samples/
-    └── screenshots/
-
+    
 ------------------------------------------------------------------------
 
 ## 🧪 Example Output (JSON)
@@ -93,14 +91,6 @@ streamlit run app.py
   "lines_detected": [...]
 }
 ```
-
-------------------------------------------------------------------------
-
-## 📷 Screenshots
-
-(Add your UI screenshot here)
-
-    screenshots/ui_preview.png
 
 ------------------------------------------------------------------------
 

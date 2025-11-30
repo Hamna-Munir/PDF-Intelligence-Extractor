@@ -1,5 +1,5 @@
 import streamlit as st
-import fitz
+import pymupdf
 import pytesseract
 import numpy as np
 import cv2
@@ -17,7 +17,7 @@ pytesseract.pytesseract.tesseract_cmd = r"C:\Program Files\Tesseract-OCR\tessera
 # Extract PDF Data
 # ----------------------------------------------------------
 def extract_pdf_advanced(file_bytes):
-    doc = fitz.open(stream=file_bytes, filetype="pdf")
+    doc = pymupdf.open(stream=file_bytes, filetype="pdf")
     output = []
 
     for page_num in range(len(doc)):
@@ -155,3 +155,4 @@ if uploaded_file:
                        mime="text/plain")
 
     st.success("Processing Completed!")
+

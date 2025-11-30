@@ -1,5 +1,5 @@
 import streamlit as st
-import fitz as pymupdf  # PyMuPDF imported as pymupdf
+import fitz  # PyMuPDF
 import pytesseract
 import numpy as np
 import cv2
@@ -12,14 +12,14 @@ from PIL import Image
 # Extract PDF Data
 # ----------------------------------------------------------
 def extract_pdf_advanced(file_bytes):
-    doc = pymupdf.open(stream=file_bytes, filetype="pdf")
+    doc = fitz.open(stream=file_bytes, filetype="pdf")
     output = []
 
     for page_num in range(len(doc)):
         page = doc[page_num]
 
         # ---------------- Page Image ----------------
-        pix = page.get_pixmap(matrix=pymupdf.Matrix(2, 2))
+        pix = page.get_pixmap(matrix=fitz.Matrix(2, 2))
         img_bytes = pix.tobytes("png")
         img = Image.open(BytesIO(img_bytes))
 
@@ -152,4 +152,3 @@ if uploaded_file:
                        mime="text/plain")
 
     st.success("Processing Completed!")
-

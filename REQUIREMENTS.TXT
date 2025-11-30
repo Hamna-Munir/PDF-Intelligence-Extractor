@@ -1,7 +1,6 @@
 streamlit
 pymupdf
 pytesseract
+Pillow
 opencv-python-headless
 numpy
-pillow
-pandas

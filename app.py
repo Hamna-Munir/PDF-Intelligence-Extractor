@@ -1,5 +1,5 @@
 import streamlit as st
-import fitz  # PyMuPDF
+import pymupdf
 import pytesseract
 import numpy as np
 import cv2
@@ -8,11 +8,16 @@ import json
 from io import BytesIO
 from PIL import Image
 
+
+# (Change if installed somewhere else)
+pytesseract.pytesseract.tesseract_cmd = r"C:\Program Files\Tesseract-OCR\tesseract.exe"
+
+
 # ----------------------------------------------------------
 # Extract PDF Data
 # ----------------------------------------------------------
 def extract_pdf_advanced(file_bytes):
-    doc = fitz.open(stream=file_bytes, filetype="pdf")
+    doc = pymupdf.open(stream=file_bytes, filetype="pdf")
     output = []
 
     for page_num in range(len(doc)):
@@ -30,7 +35,7 @@ def extract_pdf_advanced(file_bytes):
         try:
             ocr_text = pytesseract.image_to_string(img_cv).strip()
         except:
-            ocr_text = "OCR Error — Tesseract not found"
+            ocr_text = "OCR Error — Install Tesseract"
 
         # ---------------- Vector Text ----------------
         vector_text = page.get_text("text")
@@ -40,14 +45,12 @@ def extract_pdf_advanced(file_bytes):
 
         # ---------------- Table Extraction (heuristic) ----------------
         table_data = []
-        try:
-            tables = page.get_text("dict")["blocks"]
-            for t in tables:
-                if t["type"] == 5:  # type 5 = table
-                    df = pd.DataFrame(t["lines"])
-                    table_data.append(df.to_dict(orient="records"))
-        except:
-            pass
+        tables = page.find_tables()
+
+        if tables:
+            for table in tables.tables:
+                df = pd.DataFrame(table.extract())
+                table_data.append(df.to_dict(orient="records"))
 
         # ---------------- Line / Shape Detection ----------------
         edges = cv2.Canny(img_cv, 100, 200)
